@@ -4,6 +4,7 @@ module Digger
     autoload :KeepAlive, 'packets/keep_alive'
     autoload :Login, 'packets/login'
     autoload :Handshake, 'packets/handshake'
+    autoload :ChatMessage, 'packets/chat_message'
     autoload :PlayerInventory, 'packets/player_inventory'
     autoload :PlayerGrounded, 'packets/player_grounded'
     autoload :PlayerPosition, 'packets/player_position'

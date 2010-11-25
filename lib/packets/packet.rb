@@ -13,6 +13,8 @@ module Digger
               Digger::Packets::Login
             when 0x02
               Digger::Packets::Handshake
+            when 0x03
+              Digger::Packets::ChatMessage
             when 0x05
               Digger::Packets::PlayerInventory
             when 0x0a
