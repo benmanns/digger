@@ -11,6 +11,7 @@ module Digger
     autoload :PlayerLook, 'packets/player_look'
     autoload :PlayerState, 'packets/player_state'
     autoload :PlayerDigging, 'packets/player_digging'
+    autoload :PlayerBlockPlacement, 'packets/player_block_placement'
     autoload :HoldingChange, 'packets/holding_change'
     autoload :ArmAnimation, 'packets/arm_animation'
   end

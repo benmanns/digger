@@ -27,6 +27,8 @@ module Digger
               Digger::Packets::PlayerState
             when 0x0e
               Digger::Packets::PlayerDigging
+            when 0x0f
+              Digger::Packets::PlayerBlockPlacement
             when 0x10
               Digger::Packets::HoldingChange
             when 0x12
