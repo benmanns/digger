@@ -11,6 +11,8 @@ module Digger
               Digger::Packets::Login
             when 0x02
               Digger::Packets::Handshake
+            when 0x0d
+              Digger::Packets::PlayerState
             else
               Digger::Packets::Packet
           end
