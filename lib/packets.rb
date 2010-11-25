@@ -6,6 +6,7 @@ module Digger
     autoload :Handshake, 'packets/handshake'
     autoload :ChatMessage, 'packets/chat_message'
     autoload :PlayerInventory, 'packets/player_inventory'
+    autoload :SpawnPosition, 'packets/spawn_position'
     autoload :UseEntity, 'packets/use_entity'
     autoload :PlayerHealth, 'packets/player_health'
     autoload :Respawn, 'packets/respawn'

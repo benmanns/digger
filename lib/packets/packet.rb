@@ -17,6 +17,8 @@ module Digger
               Digger::Packets::ChatMessage
             when 0x05
               Digger::Packets::PlayerInventory
+            when 0x06
+              Digger::Packets::SpawnPosition
             when 0x07
               Digger::Packets::UseEntity
             when 0x08
