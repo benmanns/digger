@@ -37,6 +37,8 @@ module Digger
               Digger::Packets::ArmAnimation
             when 0x15
               Digger::Packets::PickupSpawn
+            when 0xff
+              Digger::Packets::Disconnect
             else
               Digger::Packets::Packet
           end
