@@ -6,6 +6,7 @@ module Digger
     autoload :Handshake, 'packets/handshake'
     autoload :ChatMessage, 'packets/chat_message'
     autoload :PlayerInventory, 'packets/player_inventory'
+    autoload :UseEntity, 'packets/use_entity'
     autoload :PlayerGrounded, 'packets/player_grounded'
     autoload :PlayerPosition, 'packets/player_position'
     autoload :PlayerLook, 'packets/player_look'
