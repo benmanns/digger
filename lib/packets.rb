@@ -19,6 +19,7 @@ module Digger
     autoload :HoldingChange, 'packets/holding_change'
     autoload :ArmAnimation, 'packets/arm_animation'
     autoload :PickupSpawn, 'packets/pickup_spawn'
+    autoload :MobSpawn, 'packets/mob_spawn'
     autoload :Disconnect, 'packets/disconnect'
   end
 end

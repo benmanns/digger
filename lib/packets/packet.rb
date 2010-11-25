@@ -43,6 +43,8 @@ module Digger
               Digger::Packets::ArmAnimation
             when 0x15
               Digger::Packets::PickupSpawn
+            when 0x18
+              Digger::Packets::MobSpawn
             when 0xff
               Digger::Packets::Disconnect
             else
