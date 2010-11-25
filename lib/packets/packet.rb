@@ -35,6 +35,8 @@ module Digger
               Digger::Packets::HoldingChange
             when 0x12
               Digger::Packets::ArmAnimation
+            when 0x15
+              Digger::Packets::PickupSpawn
             else
               Digger::Packets::Packet
           end

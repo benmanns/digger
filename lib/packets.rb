@@ -15,5 +15,6 @@ module Digger
     autoload :PlayerBlockPlacement, 'packets/player_block_placement'
     autoload :HoldingChange, 'packets/holding_change'
     autoload :ArmAnimation, 'packets/arm_animation'
+    autoload :PickupSpawn, 'packets/pickup_spawn'
   end
 end
