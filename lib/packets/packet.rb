@@ -7,6 +7,8 @@ module Digger
       def self.get_class(buffer = '', options = {})
         if buffer.length >= 1
           case buffer.unpack('C').first
+            when 0x01
+              Digger::Packets::Login
             when 0x02
               Digger::Packets::Handshake
             else
