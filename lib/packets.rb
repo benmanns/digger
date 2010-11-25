@@ -6,6 +6,7 @@ module Digger
     autoload :Handshake, 'packets/handshake'
     autoload :PlayerGrounded, 'packets/player_grounded'
     autoload :PlayerPosition, 'packets/player_position'
+    autoload :PlayerLook, 'packets/player_look'
     autoload :PlayerState, 'packets/player_state'
   end
 end

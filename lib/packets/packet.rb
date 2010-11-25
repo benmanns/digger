@@ -17,6 +17,8 @@ module Digger
               Digger::Packets::PlayerGrounded
             when 0x0b
               Digger::Packets::PlayerPosition
+            when 0x0c
+              Digger::Packets::PlayerLook
             when 0x0d
               Digger::Packets::PlayerState
             else
