@@ -23,6 +23,8 @@ module Digger
               Digger::Packets::PlayerState
             when 0x0e
               Digger::Packets::PlayerDigging
+            when 0x10
+              Digger::Packets::HoldingChange
             when 0x12
               Digger::Packets::ArmAnimation
             else
