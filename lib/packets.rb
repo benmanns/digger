@@ -7,6 +7,7 @@ module Digger
     autoload :ChatMessage, 'packets/chat_message'
     autoload :PlayerInventory, 'packets/player_inventory'
     autoload :UseEntity, 'packets/use_entity'
+    autoload :PlayerHealth, 'packets/player_health'
     autoload :Respawn, 'packets/respawn'
     autoload :PlayerGrounded, 'packets/player_grounded'
     autoload :PlayerPosition, 'packets/player_position'

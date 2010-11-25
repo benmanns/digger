@@ -19,6 +19,8 @@ module Digger
               Digger::Packets::PlayerInventory
             when 0x07
               Digger::Packets::UseEntity
+            when 0x08
+              Digger::Packets::PlayerHealth
             when 0x09
               Digger::Packets::Respawn
             when 0x0a
