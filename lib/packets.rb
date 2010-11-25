@@ -8,5 +8,6 @@ module Digger
     autoload :PlayerPosition, 'packets/player_position'
     autoload :PlayerLook, 'packets/player_look'
     autoload :PlayerState, 'packets/player_state'
+    autoload :ArmAnimation, 'packets/arm_animation'
   end
 end
