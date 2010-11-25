@@ -13,6 +13,8 @@ module Digger
               Digger::Packets::Login
             when 0x02
               Digger::Packets::Handshake
+            when 0x0a
+              Digger::Packets::PlayerGrounded
             when 0x0b
               Digger::Packets::PlayerPosition
             when 0x0d
