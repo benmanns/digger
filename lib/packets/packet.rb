@@ -21,6 +21,8 @@ module Digger
               Digger::Packets::PlayerLook
             when 0x0d
               Digger::Packets::PlayerState
+            when 0x0e
+              Digger::Packets::PlayerDigging
             when 0x12
               Digger::Packets::ArmAnimation
             else
