@@ -1,7 +1,3 @@
-require 'eventmachine'
-
-require 'packets'
-require 'server_connection'
 
 module Digger
   class ClientConnection < EventMachine::Connection
