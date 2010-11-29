@@ -1,0 +1,77 @@
+\documentclass[12pt]{article}
+\usepackage{fontenc}
+\usepackage{times}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\title{Building the \textbf{digger} Proxy}
+\author{
+  Benjamin Manns \\
+  Liberty University \\
+  1971 University Blvd \\
+  Lynchburg, VA 24502
+}
+\date{29 November 2010}
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+In the world of network computing and security, one may encounter various man-in-the-middle attacks. During such an attack, a hacker will impersonate both a server and client program, and route all communications through his own connection. This allows him to view, change, and delete information sent between the two communicating parties.
+
+Such an attack is viewed as negative by both people attacked. However, there are cases in which a pseudo man-in-the-middle attack can be beneficial for at least one person. Programs that enable this desired interception of information are called proxies. There are proxies for web connections (Squid, Burp Suite, etc), network connections (SOCKS), and other specific protocols. The last is the one discussed in this paper, in which the \textbf{digger} proxy is created for intercepting data for the \href{http://www.minecraft.net/}{Minecraft} game protocol.
+
+\section{Purpose of the \textbf{digger} Project}
+The \textbf{digger} proxy creates a platform for analyzing data sent between the Minecraft game client and server. With the knowledge gained, certain exploits will be built into the proxy to be used by connecting players. The program will be developed in Ruby for easy maintenance and cross-platform capabilities. The platform should be expandable to allow for both small and significant changes to the protocol, as well as expansion to proxy logic to allow others to modify the program to suit their needs.
+
+\section{Technologies Used}
+Each step in the creation required multiple different technologies. During analysis, \href{http://www.wireshark.org/}{Wireshark} dissected the network stream. This was made very simple by the \href{https://github.com/ScottBrooks/minecraft-dissector}{minecraft-dissector} plugin Scott Brooks. In addition to the network dumps, the Minecraft client and server were disassembled with \href{http://members.fortunecity.com/neshkov/dj.html}{DJ Java Decompiler} to obtain information about newer packets. After analysis, the program was written in \href{http://www.ruby-lang.org/en/}{Ruby}.  Inherent from the purpose of the project, there was a need to manage socket connections and threading. This was done with the \href{http://rubyeventmachine.com/}{EventMachine} gem for Ruby. Finally, the code was to be managed and deployed with \href{http://git-scm.com/}{Git} and \href{https://github.com/}{Github} for version control and publication.
+
+\section{Build Process}
+The three major steps in development were setup and analysis, in which network data and source code for the client and server were analyzed to create a basic map of the protocol. Next was the implementing step, where the \textbf{digger} proxy was written with the capability to process the data and produce meaningful information. Finally, was the exploiting step in which the information gained was used to create exploits within the game.
+
+\subsection{Setup and Analysis}
+The Minecraft client and server are both written in java and are available for download. Both are fairly simple to setup with a simple java-enabled operating system (Windows, OSX, and Linux are all supported).  This also allowed a local server setup, as opposed to a company-owned server in which aggressive network analysis would likely be labeled as a hacking attempt.
+
+In the first few moments of analysis, I realized that the packet structures used by Minecraft were unencrypted (a good thing), but also had arbitrary lengths specified within the client (a bad thing). This meant that instead of dissecting packets based on a prepended length value, every single packet must be reverse engineered to determine the individual lengths. Otherwise, if a single packet was off in length by a single byte, the next instruction would be misinterpreted, and so on. Luckily, much of the work was done already, but due to a recent protocol change there was analysis left to perform.
+
+\subsubsection{Wireshark and minecraft-dissector}
+Wireshark is a graphical interface for capturing and analyzing network data. After starting on a network card, Wireshark will display all packets sent to or from the card. As the amount of data is large, filtering is a necessary feature. For the first step of analysis, the filter `tcp.port == 25565` showed only data sent to or from the Minecraft server. However, because of the nature of TCP streams, all of the information was mashed together in a way that was hard to process. Fortunately, the Wireshark plugin minecraft-dissector will split the data for an older version of the protocol.
+
+\subsubsection{JD Java Decompiler}
+Because the minecraft-dissector had not been updated for the latest protocol, several of the different packet types had to be manually reverse engineered. This was possible because the client is written in non-obfuscated java, and reverse engineering is not prohibited by the license agreement. By reading the code for the client, I was able to determine how the new protocol worked.
+
+\subsection{Implementing}
+After documenting the different types of instructions sent to the server, the proxy framework was created for interpreting the data.
+
+\subsubsection{EventMachine}
+The proxy was designed using the EventMachine gem, which is itself a framework for event-based network connections in Ruby. EventMachine creates a single "reactor" thread which reacts to events happening in a system, as the names imply, and sends the resulting information to the host class. The abstraction and ease of implementation reduced the amount of time and code required for this project by at least half. Because of its significance, much time was spent learning the intricacies of EventMachine, starting from a basic "Hello World" server to a multi-workstation chat server. Because all of the low-level socket work is taken care of, coding such servers became easier (and a lot more fun).
+
+\subsubsection{Packet Classes}
+After the basic implementation, the laborious task of creating classes for each packet was begun. For this, only a function which returned the expected packet length was necessary. An example is provided below:
+\lstinputlisting[language=Ruby]{lib/packets/chat_message.rb}
+This class declaration enables the method ChatMessage.get\textunderscore{}length. Because the packet has an arbitrary-length string, it is necessary to process the buffer information for the string length versus returning a simple constant.
+
+After each of these classes was created and linked to by packet id (what the client uses to distinguish instructions), an event called receive\textunderscore{}packet was created. This was called whenever a full length packet was received from the stream, and passed the buffered data as a parameter, which leads us to the next step.
+
+\subsection{Exploitation}
+When packets can be received and sent via event-based methods, different ones can be intercepted, changed or dropped, and resent. This allows aggressive exploration of the server communication. One very important discovery was the lack of server-side checks performed when a client sent instructions. For instance, the server receives client position, inventory values, equipped items, and the digging action without verifying that such commands are even possible with the standard game client. This allowed several exploits to be created, currently implemented are a "fly" command, "auto-equip" commands, and "super-digging."
+
+\subsubsection{Flying}
+Flying is achieved by intercepting all of the information sent to the server about the client's position. When the client "tells" the server that it is at the position (x,y,z), the proxy changes this to send (x,y+4,z), floating the user in the air four blocks. This added height protects the user from ground-dwelling monsters as well as ill-motivated players who may attempt attacks. This is possible because the server depends on the client to send information about its position to the extent that the player will not be moved unless the client (in the case, the proxy) sends the command for it.
+
+\subsubsection{Auto-Equip}
+Because some items in the game are better than others for different actions (shovels for digging dirt, pickaxes for breaking stone, or swords for fighting other creatures), it was beneficial to design the proxy to automatically equip the best item for desired actions. The proxy is designed to send an "equip diamond pickaxe" command prior it issuing any "dig" commands for quicker mining. Likewise, when other creature-entities are attacked, the proxy automatically issues an "equip diamond sword" command for the greatest damage. The server enables these exploits by performing no checks as to whether or not a player owns the desired item.
+
+\subsubsection{"Super Digging"}
+The most destructive exploit found was the ability to send repeated "dig" commands in a short period of time. This allowed the client to dig a whole to the bottom of the map in seconds, versus the normal required time of around five minutes. In addition, the ability to repeatedly place blocks allowed proxy users to dig to the bottom of the map, and fill the hole from floor to ceiling with TNT blocks. Because the server doesn't limit digging speed, nor does it limit how fast blocks are placed, players can create holes the size of craters in unprotected spaces.
+
+\section{Pitfalls}
+The problems faced during the development of the \textbf{digger} proxy were mostly due to the design of the Minecraft client and server. These were the lack of length specification in the packet, frequent updates to the Minecraft protocol, and the overall poor performance and garbage collection of the game programs. Because no length is specified in the packets, they had to be understood as a whole before digging deeper into the workings of any single instruction. During the writing of the program there were several large updates which required more analysis of the game protocol. Finally, because the game is written with poor garbage collection, server and client instances can consume over a gigabyte of RAM each and have frequently pegged CPU cores at 100\%. This created a problem when trying to run multiple clients alongside the server on the same machine.
+
+\section{Further Development}
+The source code is currently available online via Git at \href{https://github.com/benmanns/digger}{github.com/benmanns/digger}. The project is open source (license not decided upon, yet), and is open to development from anyone. Among the things left to be done are further exploration of server-to-client packets, discovery of more exploits, and general refactoring.
+
+\end{document}
+
