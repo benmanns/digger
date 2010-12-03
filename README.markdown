@@ -6,6 +6,7 @@
 1. Install [Bundler](http://gembundler.com/).
 1. Clone the repository: `git clone git://github.com/benmanns/digger.git`.
 1. Enter the digger directory: `cd digger`.
+1. Install dependencies with `bundle install`.
 1. Run: `bin/digger.rb [server-ip] [server-port] [proxy-ip] [proxy-port]` (defaults localhost 25565 localhost 25564).
 1. Connect [Minecraft](http://www.minecraft.net) to your proxy address (default localhost:25564).
 
