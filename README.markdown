@@ -20,4 +20,3 @@
 
 ## For those without Git ##
 Github is also a SVN host, so this repository can be accessed without installing git via `svn checkout https://svn.github.com/benmanns/digger.git digger`.
-
