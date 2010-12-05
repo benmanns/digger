@@ -1,1 +1,4 @@
 .project
+doc/*
+!doc/README.tex
+texput.log
